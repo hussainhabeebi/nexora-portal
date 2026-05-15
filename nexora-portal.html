@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f8fc;
+  --bg2: #ffffff;
+  --bg3: #f0f2f8;
+  --sidebar: #1a1040;
+  --accent: #7c3aed;
+  --accent2: #6d28d9;
+  --accent-light: #f5f3ff;
+  --accent-dim: rgba(124,58,237,0.1);
+  --green: #10b981;
+  --green-light: #ecfdf5;
+  --amber: #f59e0b;
+  --amber-light: #fffbeb;
+  --red: #ef4444;
+  --red-light: #fef2f2;
+  --blue: #3b82f6;
+  --blue-light: #eff6ff;
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #94a3b8;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07);
+  --shadow2: 0 4px 16px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; display:flex; }
+
+/* ── Login ── */
+#login-page {
+  position:fixed; inset:0;
+  background:linear-gradient(135deg,#1a1040 0%,#2d1b6e 50%,#1a1040 100%);
+  display:flex; align-items:center; justify-content:center; z-index:1000;
+}
+.login-box { background:#fff; border-radius:16px; padding:48px 40px; width:400px; box-shadow:0 24px 80px rgba(0,0,0,0.3); }
+.login-logo { text-align:center; margin-bottom:32px; }
+.login-logo-text { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--text); display:block; }
+.login-logo-sub { font-size:13px; color:var(--text3); margin-top:4px; display:block; }
+.login-title { font-size:18px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.login-sub { font-size:13px; color:var(--text2); margin-bottom:28px; }
+.login-form-group { margin-bottom:16px; }
+.login-label { display:block; font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+.login-input { width:100%; padding:11px 14px; border:1.5px solid var(--border2); border-radius:var(--radius-sm); font-size:14px; font-family:'Outfit',sans-serif; color:var(--text); background:var(--bg); outline:none; transition:all 0.15s; }
+.login-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); background:#fff; }
+.login-btn { width:100%; padding:12px; background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); font-size:15px; font-weight:600; font-family:'Outfit',sans-serif; cursor:pointer; margin-top:8px; transition:background 0.15s; }
+.login-btn:hover { background:var(--accent2); }
+.login-btn:disabled { background:var(--text3); cursor:not-allowed; }
+.login-error { background:var(--red-light); border:1px solid #fecaca; border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:var(--red); margin-top:12px; display:none; }
+.login-footer { text-align:center; margin-top:24px; font-size:12px; color:var(--text3); }
+
+/* ── App ── */
+#app-shell { display:none; width:100%; height:100vh; overflow:hidden; }
+#app-shell.visible { display:flex; }
+
+/* ── Sidebar ── */
+.sidebar { width:240px; background:var(--sidebar); display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-logo { padding:24px 20px 20px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.logo-text { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#fff; }
+.logo-sub { font-size:11px; color:rgba(255,255,255,0.35); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px; }
+.sidebar-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+.nav-section-title { font-size:10px; font-weight:600; color:rgba(255,255,255,0.25); text-transform:uppercase; letter-spacing:0.1em; padding:12px 8px 6px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-sm); cursor:pointer; color:rgba(255,255,255,0.5); font-size:13.5px; transition:all 0.15s; margin-bottom:2px; }
+.nav-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
+.nav-item.active { background:var(--accent); color:#fff; font-weight:500; }
+.nav-item svg { width:16px; height:16px; flex-shrink:0; opacity:0.8; }
+.nav-item.active svg { opacity:1; }
+.nav-badge { margin-left:auto; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.7); font-size:10px; font-weight:600; padding:2px 7px; border-radius:20px; }
+.nav-item.active .nav-badge { background:rgba(255,255,255,0.25); color:#fff; }
+.chatwoot-link { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-sm); cursor:pointer; color:rgba(255,255,255,0.5); font-size:13.5px; margin-bottom:2px; transition:all 0.15s; text-decoration:none; }
+.chatwoot-link:hover { background:rgba(124,58,237,0.2); color:rgba(255,255,255,0.85); }
+.chatwoot-link svg { width:16px; height:16px; flex-shrink:0; }
+.sidebar-footer { padding:16px 12px; border-top:1px solid rgba(255,255,255,0.07); }
+.user-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--radius-sm); cursor:pointer; transition:background 0.15s; justify-content:space-between; }
+.user-row:hover { background:rgba(255,255,255,0.06); }
+.user-info { display:flex; align-items:center; gap:10px; }
+.user-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),#2563eb); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#fff; flex-shrink:0; }
+.user-name { font-size:13px; font-weight:500; color:rgba(255,255,255,0.8); }
+.user-role { font-size:11px; color:rgba(255,255,255,0.3); }
+.logout-btn { background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.3); padding:4px; border-radius:4px; transition:color 0.15s; }
+.logout-btn:hover { color:var(--red); }
+.logout-btn svg { width:15px; height:15px; }
+
+/* ── Main ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar { background:var(--bg2); border-bottom:1px solid var(--border); padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.page-title { font-size:16px; font-weight:600; color:var(--text); }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.topbar-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:none; font-family:'Outfit',sans-serif; transition:all 0.15s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent2); }
+.btn-ghost { background:none; border:1px solid var(--border2); color:var(--text2); }
+.btn-ghost:hover { background:var(--bg3); }
+.btn-success { background:var(--green); color:#fff; }
+.btn-success:hover { background:#059669; }
+.btn-refresh { background:none; border:1px solid var(--border2); color:var(--accent); }
+.btn-refresh:hover { background:var(--accent-light); }
+.topbar-btn svg { width:15px; height:15px; }
+.topbar-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.content { flex:1; overflow-y:auto; padding:24px; }
+.page { display:none; }
+.page.active { display:block; }
+.last-updated { font-size:11px; color:var(--text3); }
+
+/* ── Cache Notice ── */
+.cache-notice { display:flex; align-items:center; gap:8px; background:var(--amber-light); border:1px solid #fde68a; border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; color:#92400e; margin-bottom:20px; }
+.cache-notice svg { width:14px; height:14px; flex-shrink:0; }
+
+/* ── Stats ── */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.stat-card { background:var(--bg2); border-radius:var(--radius); padding:20px; border:1px solid var(--border); box-shadow:var(--shadow); position:relative; overflow:hidden; }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--radius) var(--radius) 0 0; }
+.stat-card.purple::before { background:var(--accent); }
+.stat-card.green::before { background:var(--green); }
+.stat-card.amber::before { background:var(--amber); }
+.stat-card.blue::before { background:var(--blue); }
+.stat-label { font-size:12px; font-weight:500; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+.stat-value { font-size:32px; font-weight:700; color:var(--text); font-family:'Playfair Display',serif; line-height:1; margin-bottom:6px; }
+.stat-sub { font-size:12px; color:var(--text3); }
+.stat-icon { position:absolute; top:20px; right:20px; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+.stat-icon.purple { background:var(--accent-light); color:var(--accent); }
+.stat-icon.green { background:var(--green-light); color:var(--green); }
+.stat-icon.amber { background:var(--amber-light); color:var(--amber); }
+.stat-icon.blue { background:var(--blue-light); color:var(--blue); }
+.stat-icon svg { width:20px; height:20px; }
+
+/* ── Card ── */
+.card { background:var(--bg2); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:20px; overflow:hidden; }
+.card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.card-title { font-size:14px; font-weight:600; color:var(--text); }
+.card-body { padding:20px; }
+
+/* ── Groups ── */
+.groups-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+.group-card { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; cursor:pointer; transition:all 0.15s; position:relative; }
+.group-card:hover { border-color:var(--accent); background:var(--accent-light); transform:translateY(-1px); }
+.group-card.selected { border-color:var(--accent); background:var(--accent-light); }
+.group-card.selected::after { content:'✓'; position:absolute; top:10px; right:12px; color:var(--accent); font-weight:700; }
+.group-school { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+.group-district { font-size:11px; color:var(--text3); margin-bottom:6px; }
+.group-count { font-size:22px; font-weight:700; color:var(--accent); font-family:'Playfair Display',serif; }
+.group-label { font-size:11px; color:var(--text3); }
+
+/* ── Template Cards ── */
+.template-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+.template-card { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; cursor:pointer; transition:all 0.15s; }
+.template-card:hover { border-color:var(--accent); }
+.template-card.selected { border-color:var(--accent); background:var(--accent-light); }
+.template-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.template-lang { font-size:10px; padding:2px 7px; background:var(--accent-dim); color:var(--accent); border-radius:20px; font-weight:500; }
+.template-body { font-size:12px; color:var(--text2); line-height:1.5; background:var(--bg2); border-radius:6px; padding:10px; border:1px solid var(--border); white-space:pre-wrap; word-break:break-word; max-height:80px; overflow:hidden; }
+
+/* ── Conversations ── */
+.conv-item { display:flex; align-items:flex-start; gap:12px; padding:14px 20px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.1s; }
+.conv-item:hover { background:var(--bg3); }
+.conv-item:last-child { border-bottom:none; }
+.conv-avatar { width:38px; height:38px; border-radius:50%; background:var(--accent-dim); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+.conv-info { flex:1; min-width:0; }
+.conv-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+.conv-name { font-size:13px; font-weight:600; color:var(--text); }
+.conv-time { font-size:11px; color:var(--text3); }
+.conv-msg { font-size:12px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.conv-meta { display:flex; align-items:center; gap:6px; margin-top:4px; }
+.channel-badge { font-size:10px; padding:2px 7px; border-radius:20px; font-weight:500; }
+.ch-whatsapp { background:#dcfce7; color:#166534; }
+.ch-email { background:#ede9fe; color:#5b21b6; }
+.ch-webchat { background:#dbeafe; color:#1e40af; }
+.unread-badge { margin-left:auto; background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; }
+.status-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.dot-open { background:var(--green); }
+.dot-resolved { background:var(--text3); }
+.dot-pending { background:var(--amber); }
+.open-chatwoot { margin-left:auto; color:var(--accent); font-size:11px; font-weight:500; display:flex; align-items:center; gap:4px; opacity:0; transition:opacity 0.15s; }
+.conv-item:hover .open-chatwoot { opacity:1; }
+.open-chatwoot svg { width:12px; height:12px; }
+
+/* ── Wizard ── */
+.wizard-steps { display:flex; align-items:center; gap:0; margin-bottom:28px; }
+.wizard-step { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; color:var(--text3); }
+.step-num { width:28px; height:28px; border-radius:50%; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:var(--bg2); flex-shrink:0; }
+.wizard-step.active .step-num { border-color:var(--accent); background:var(--accent); color:#fff; }
+.wizard-step.active { color:var(--accent); }
+.wizard-step.done .step-num { border-color:var(--green); background:var(--green); color:#fff; }
+.wizard-step.done { color:var(--green); }
+.step-divider { flex:1; height:1px; background:var(--border); margin:0 8px; max-width:60px; }
+
+/* ── District Filter ── */
+.filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.filter-chip { padding:5px 12px; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--border2); background:var(--bg2); color:var(--text2); transition:all 0.15s; }
+.filter-chip:hover { border-color:var(--accent); color:var(--accent); }
+.filter-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ── Form ── */
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+.form-input,.form-select,.form-textarea { width:100%; padding:9px 12px; border:1px solid var(--border2); border-radius:var(--radius-sm); font-size:13px; font-family:'Outfit',sans-serif; color:var(--text); background:var(--bg2); outline:none; transition:border-color 0.15s; }
+.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+.form-textarea { resize:vertical; min-height:100px; line-height:1.6; }
+
+/* ── Progress ── */
+.progress-bar-wrap { background:var(--bg3); border-radius:20px; height:8px; overflow:hidden; margin-top:8px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--green)); border-radius:20px; transition:width 0.5s ease; }
+
+/* ── Reports ── */
+.report-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.metric-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); }
+.metric-row:last-child { border-bottom:none; }
+.metric-label { font-size:13px; color:var(--text2); }
+.metric-value { font-size:15px; font-weight:700; color:var(--text); }
+
+/* ── Modal ── */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--bg2); border-radius:var(--radius); width:520px; max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+.modal-header { padding:20px 24px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.modal-title { font-size:16px; font-weight:600; }
+.modal-close { width:30px; height:30px; border-radius:6px; background:var(--bg3); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text2); font-size:16px; }
+.modal-close:hover { background:var(--border); }
+.modal-body { padding:20px 24px; }
+.modal-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+
+/* ── Toast ── */
+.toast-container { position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:8px; }
+.toast { padding:12px 18px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; color:#fff; box-shadow:var(--shadow2); animation:slideIn 0.2s ease; max-width:320px; }
+.toast.success { background:var(--green); }
+.toast.error { background:var(--red); }
+.toast.info { background:var(--accent); }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+.spinning { animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="login-logo-text">Nexora</span>
+      <span class="login-logo-sub">Academy Portal</span>
+    </div>
+    <div class="login-title">Sign in to your account</div>
+    <div class="login-sub">Enter your credentials to access the portal</div>
+    <div class="login-form-group">
+      <label class="login-label">Email address</label>
+      <input class="login-input" type="email" id="login-email" placeholder="admin@nexora.com" autocomplete="email" />
+    </div>
+    <div class="login-form-group">
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
+    </div>
+    <button class="login-btn" onclick="doLogin()" id="login-btn">Sign in</button>
+    <div class="login-error" id="login-error">Invalid email or password.</div>
+    <div class="login-footer">Powered by Aiingo Technologies</div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">Nexora</div>
+      <div class="logo-sub">Academy Portal</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Overview</div>
+      <div class="nav-item active" onclick="navigate('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-section-title">Marketing</div>
+      <div class="nav-item" onclick="navigate('campaigns',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.67 9.8a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6z"/></svg>
+        Campaigns
+      </div>
+      <div class="nav-item" onclick="navigate('templates',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        Templates
+      </div>
+      <div class="nav-section-title">Support</div>
+      <div class="nav-item" onclick="navigate('conversations',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Conversations
+        <span class="nav-badge" id="open-count">—</span>
+      </div>
+      <div class="nav-section-title">Analytics</div>
+      <div class="nav-item" onclick="navigate('reports',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reports
+      </div>
+      <div class="nav-section-title">Data</div>
+      <div class="nav-item" onclick="navigate('leads',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Leads
+      </div>
+      <div class="nav-section-title">Inbox</div>
+      <a class="chatwoot-link" href="https://app.aiingo.com/app/accounts/2/inbox/2" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Open Full Inbox
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-left:auto;opacity:0.4"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar-text">NA</div>
+          <div>
+            <div class="user-name" id="user-display-name">Nexora Admin</div>
+            <div class="user-role">Administrator</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Dashboard</div>
+      <div class="topbar-right">
+        <span class="last-updated" id="last-updated"></span>
+        <button class="topbar-btn btn-refresh" id="refresh-btn" onclick="refreshCurrentPage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="refresh-icon"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- Dashboard -->
+      <div class="page active" id="page-dashboard">
+        <div class="cache-notice" id="dash-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load live data.
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card purple">
+            <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div class="stat-label">Open Conversations</div>
+            <div class="stat-value" id="stat-open">—</div>
+            <div class="stat-sub">Active right now</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="stat-label">Resolved</div>
+            <div class="stat-value" id="stat-resolved">—</div>
+            <div class="stat-sub">This month</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="stat-label">Total Leads</div>
+            <div class="stat-value" id="stat-leads">—</div>
+            <div class="stat-sub">In Google Sheets</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="stat-label">Schools</div>
+            <div class="stat-value" id="stat-schools">—</div>
+            <div class="stat-sub">Across all districts</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Conversations</div>
+              <button class="topbar-btn btn-ghost" style="padding:5px 10px;font-size:12px;" onclick="navigate('conversations',document.querySelectorAll('.nav-item')[3])">View All</button>
+            </div>
+            <div id="dash-conversations"><div style="padding:40px;text-align:center;color:var(--text3);font-size:13px;">Click Refresh to load</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Top Districts</div></div>
+            <div class="card-body" id="dash-districts"><div style="text-align:center;color:var(--text3);font-size:13px;">Click Refresh to load</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaigns -->
+      <div class="page" id="page-campaigns">
+        <div class="cache-notice" id="camp-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load data.
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Send WhatsApp Campaign</div></div>
+          <div class="card-body">
+            <div class="wizard-steps">
+              <div class="wizard-step active" id="step-1-indicator"><div class="step-num">1</div> Select Audience</div>
+              <div class="step-divider"></div>
+              <div class="wizard-step" id="step-2-indicator"><div class="step-num">2</div> Choose Template</div>
+              <div class="step-divider"></div>
+              <div class="wizard-step" id="step-3-indicator"><div class="step-num">3</div> Review & Send</div>
+            </div>
+
+            <!-- Step 1 -->
+            <div id="campaign-step-1">
+              <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Filter by district, then select schools. Leave all unselected to send to everyone.</p>
+              <div style="margin-bottom:12px;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;">
+                  <input type="checkbox" id="select-all-groups" onchange="toggleAllGroups(this)"> Send to ALL contacts
+                </label>
+              </div>
+              <div class="filter-bar" id="district-filters"></div>
+              <div class="groups-grid" id="campaign-groups">
+                <div style="grid-column:1/-1;text-align:center;color:var(--text3);font-size:13px;padding:20px;">Click Refresh to load</div>
+              </div>
+              <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+                <button class="topbar-btn btn-primary" onclick="campaignStep2()">Next: Choose Template →</button>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="campaign-step-2" style="display:none;">
+              <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Select an approved WhatsApp template.</p>
+              <div class="template-grid" id="campaign-templates">
+                <div style="text-align:center;color:var(--text3);font-size:13px;padding:20px;">Click Refresh to load</div>
+              </div>
+              <div style="margin-top:20px;display:flex;justify-content:space-between;">
+                <button class="topbar-btn btn-ghost" onclick="campaignStep1()">← Back</button>
+                <button class="topbar-btn btn-primary" onclick="campaignStep3()">Next: Review →</button>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="campaign-step-3" style="display:none;">
+              <div style="background:var(--bg3);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--border);margin-bottom:20px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div><div class="stat-label" style="margin-bottom:6px;">Audience</div><div id="review-audience" style="font-size:13px;font-weight:600;">—</div></div>
+                  <div><div class="stat-label" style="margin-bottom:6px;">Recipients</div><div id="review-count" style="font-size:28px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;">—</div></div>
+                  <div><div class="stat-label" style="margin-bottom:6px;">Template</div><div id="review-template" style="font-size:14px;font-weight:600;">—</div></div>
+                  <div><div class="stat-label" style="margin-bottom:6px;">Est. Time</div><div id="review-time" style="font-size:14px;font-weight:600;">—</div></div>
+                </div>
+                <div style="margin-top:16px;">
+                  <div class="stat-label" style="margin-bottom:6px;">Preview</div>
+                  <div id="review-message" style="font-size:13px;color:var(--text2);background:var(--bg2);padding:12px;border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.6;"></div>
+                </div>
+              </div>
+              <div id="sending-progress" style="display:none;margin-bottom:20px;">
+                <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px;">Sending campaign...</div>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+                <div id="progress-text" style="font-size:12px;color:var(--text3);margin-top:6px;">Preparing...</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <button class="topbar-btn btn-ghost" onclick="campaignStep2()">← Back</button>
+                <button class="topbar-btn btn-success" id="send-btn" onclick="sendCampaign()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  Send Campaign
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Templates -->
+      <div class="page" id="page-templates">
+        <div class="cache-notice" id="tpl-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load templates.
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+          <button class="topbar-btn btn-primary" onclick="openCreateTemplate()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create Template
+          </button>
+        </div>
+        <div id="templates-list"><div style="text-align:center;color:var(--text3);font-size:13px;padding:40px;">Click Refresh to load</div></div>
+      </div>
+
+      <!-- Conversations -->
+      <div class="page" id="page-conversations">
+        <div class="cache-notice" id="conv-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load. Click any row to open in Chatwoot.
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-body" style="padding:12px 16px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="topbar-btn btn-primary" id="filter-open" onclick="filterConv('open',this)" style="padding:6px 14px;font-size:12px;">Open</button>
+              <button class="topbar-btn btn-ghost" id="filter-resolved" onclick="filterConv('resolved',this)" style="padding:6px 14px;font-size:12px;">Resolved</button>
+              <button class="topbar-btn btn-ghost" id="filter-pending" onclick="filterConv('pending',this)" style="padding:6px 14px;font-size:12px;">Pending</button>
+              <div style="margin-left:auto;font-size:12px;color:var(--text3);" id="conv-count-label"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div id="conversations-list"><div style="padding:40px;text-align:center;color:var(--text3);font-size:13px;">Click Refresh to load</div></div>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="page" id="page-reports">
+        <div class="cache-notice" id="rep-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load reports.
+        </div>
+        <div class="report-grid">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Conversation Metrics</div></div>
+            <div class="card-body" id="report-metrics"><div style="text-align:center;color:var(--text3);font-size:13px;">Click Refresh to load</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Lead Distribution</div></div>
+            <div class="card-body" id="report-leads"><div style="text-align:center;color:var(--text3);font-size:13px;">Click Refresh to load</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leads -->
+      <div class="page" id="page-leads">
+        <div class="cache-notice" id="leads-cache-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Click <strong style="margin:0 4px;">Refresh</strong> to load leads.
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Leads by School & District</div>
+            <div style="font-size:12px;color:var(--text3);" id="leads-total-label"></div>
+          </div>
+          <div class="card-body">
+            <div class="filter-bar" id="leads-district-filters"></div>
+            <div class="groups-grid" id="leads-groups">
+              <div style="grid-column:1/-1;text-align:center;color:var(--text3);font-size:13px;padding:20px;">Click Refresh to load</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Create Template Modal -->
+<div class="modal-overlay" id="create-template-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create WhatsApp Template</div>
+      <button class="modal-close" onclick="closeCreateTemplate()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Template Name</label>
+        <input class="form-input" id="tpl-name" placeholder="e.g. nexora_admission" />
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Lowercase, numbers and underscores only</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Language</label>
+          <select class="form-select" id="tpl-lang">
+            <option value="en">English</option>
+            <option value="en_IN">English (India)</option>
+            <option value="ml">Malayalam</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="tpl-category">
+            <option value="MARKETING">Marketing</option>
+            <option value="UTILITY">Utility</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Header (optional)</label>
+        <input class="form-input" id="tpl-header" placeholder="e.g. Nexora Academy" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Body *</label>
+        <textarea class="form-textarea" id="tpl-body" placeholder="Hi {{1}}, Nexora Academy invites you to our open day on {{2}}."></textarea>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Use {{1}}, {{2}} for variables</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Footer (optional)</label>
+        <input class="form-input" id="tpl-footer" placeholder="Reply STOP to unsubscribe" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn btn-ghost" onclick="closeCreateTemplate()">Cancel</button>
+      <button class="topbar-btn btn-primary" onclick="createTemplate()">Submit for Approval</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+const N8N = 'https://n8n.aiingo.com/webhook';
+const CHATWOOT_URL = 'https://app.aiingo.com/app/accounts/2/conversations';
+
+const USERS = {
+  'admin@nexora.com': { password: 'Nexora@2026', name: 'Nexora Admin' },
+  'staff@nexora.com': { password: 'Staff@2026', name: 'Nexora Staff' }
+};
+
+let state = {
+  currentPage: 'dashboard',
+  convStatus: 'open',
+  groups: [],
+  templates: [],
+  selectedGroups: [],
+  selectedTemplate: null,
+  activeDistrict: 'ALL',
+  cache: {}
+};
+
+// ── Login ──
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  err.style.display = 'none';
+  const user = USERS[email];
+  if (!user || user.password !== password) { err.style.display = 'block'; document.getElementById('login-password').value = ''; return; }
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  sessionStorage.setItem('nexora_user', JSON.stringify({ email, name: user.name }));
+  setTimeout(() => {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app-shell').classList.add('visible');
+    const initials = user.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+    document.getElementById('user-avatar-text').textContent = initials;
+    document.getElementById('user-display-name').textContent = user.name;
+    btn.disabled = false; btn.textContent = 'Sign in';
+  }, 600);
+}
+
+function doLogout() {
+  sessionStorage.removeItem('nexora_user');
+  document.getElementById('app-shell').classList.remove('visible');
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  state.cache = {};
+}
+
+window.addEventListener('load', () => {
+  const u = sessionStorage.getItem('nexora_user');
+  if (u) {
+    const user = JSON.parse(u);
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app-shell').classList.add('visible');
+    const initials = user.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+    document.getElementById('user-avatar-text').textContent = initials;
+    document.getElementById('user-display-name').textContent = user.name;
+  }
+});
+
+// ── Navigation ──
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard',campaigns:'Campaigns',templates:'Templates',conversations:'Conversations',reports:'Reports',leads:'Leads'};
+  document.getElementById('page-title').textContent = titles[page]||page;
+  state.currentPage = page;
+  if (state.cache[page]) renderFromCache(page);
+}
+
+function renderFromCache(page) {
+  if (page==='dashboard' && state.cache.stats) renderDashStats(state.cache.stats);
+  if (page==='dashboard' && state.cache.conversations) renderDashConversations(state.cache.conversations);
+  if (page==='dashboard' && state.cache.groups) renderDashDistricts(state.cache.groups);
+  if (page==='conversations' && state.cache.conversations) renderConversations(state.cache.conversations);
+  if (page==='leads' && state.cache.groups) renderLeads(state.cache.groups, state.cache.leadsTotal);
+  if (page==='templates' && state.cache.templates) renderTemplatesPage(state.cache.templates);
+  if (page==='campaigns' && state.cache.groups) renderCampaignGroups(state.cache.groups);
+  if (page==='campaigns' && state.cache.templates) renderCampaignTemplates(state.cache.templates);
+  if (page==='reports' && state.cache.stats) renderReports(state.cache.stats);
+  if (page==='reports' && state.cache.groups) renderReportLeads(state.cache.groups);
+}
+
+// ── Refresh ──
+async function refreshCurrentPage() {
+  const page = state.currentPage;
+  const btn = document.getElementById('refresh-btn');
+  const icon = document.getElementById('refresh-icon');
+  btn.disabled = true; icon.classList.add('spinning');
+  try {
+    if (page==='dashboard') await refreshDashboard();
+    else if (page==='conversations') await refreshConversations();
+    else if (page==='templates') await refreshTemplates();
+    else if (page==='campaigns') await refreshCampaign();
+    else if (page==='reports') await refreshReports();
+    else if (page==='leads') await refreshLeads();
+    const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('last-updated').textContent = `Updated ${now}`;
+    state.cache[page] = true;
+    hideCacheNotice(page);
+  } catch(e) { showToast('Refresh failed. Check connection.','error'); }
+  finally { btn.disabled=false; icon.classList.remove('spinning'); }
+}
+
+function hideCacheNotice(page) {
+  const map={dashboard:'dash-cache-notice',campaigns:'camp-cache-notice',templates:'tpl-cache-notice',conversations:'conv-cache-notice',reports:'rep-cache-notice',leads:'leads-cache-notice'};
+  const el = document.getElementById(map[page]);
+  if (el) el.style.display='none';
+}
+
+// ── API ──
+async function api(endpoint, method='GET', body=null) {
+  const opts={method,headers:{'Content-Type':'application/json'}};
+  if (body) opts.body=JSON.stringify(body);
+  const r = await fetch(`${N8N}/${endpoint}`,opts);
+  if (!r.ok) throw new Error('API '+r.status);
+  return r.json();
+}
+
+// ── Dashboard ──
+async function refreshDashboard() {
+  await Promise.all([refreshStats(), refreshDashConvs(), refreshLeadData()]);
+}
+
+async function refreshStats() {
+  const data = await api('nexora-get-stats');
+  state.cache.stats = data;
+  renderDashStats(data);
+}
+
+function renderDashStats(data) {
+  document.getElementById('stat-open').textContent = data.open??'—';
+  document.getElementById('stat-resolved').textContent = data.resolved??'—';
+  document.getElementById('open-count').textContent = data.open??'—';
+}
+
+async function refreshDashConvs() {
+  const data = await api('nexora-get-conversations?status=open');
+  state.cache.conversations = data.conversations||[];
+  renderDashConversations(state.cache.conversations);
+}
+
+function renderDashConversations(convs) {
+  const el = document.getElementById('dash-conversations');
+  if (!convs.length) { el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">No open conversations</div>'; return; }
+  el.innerHTML = convs.slice(0,5).map(c=>convHtml(c)).join('');
+}
+
+async function refreshLeadData() {
+  const data = await api('nexora-get-leads');
+  state.cache.groups = data.groups||[];
+  state.cache.leadsTotal = data.total||0;
+  state.groups = state.cache.groups;
+  document.getElementById('stat-leads').textContent = data.total??'—';
+  const districts = [...new Set(state.cache.groups.map(g=>g.district))];
+  document.getElementById('stat-schools').textContent = state.cache.groups.length;
+  renderDashDistricts(state.cache.groups);
+}
+
+function renderDashDistricts(groups) {
+  const el = document.getElementById('dash-districts');
+  const districtMap = {};
+  groups.forEach(g => { districtMap[g.district]=(districtMap[g.district]||0)+g.count; });
+  const sorted = Object.entries(districtMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  el.innerHTML = sorted.map(([d,c]) => `
+    <div class="metric-row">
+      <div class="metric-label">${d}</div>
+      <div class="metric-value" style="color:var(--accent)">${c}</div>
+    </div>`).join('');
+}
+
+// ── Conversations ──
+async function refreshConversations() {
+  const data = await api(`nexora-get-conversations?status=${state.convStatus}`);
+  state.cache.conversations = data.conversations||[];
+  renderConversations(state.cache.conversations);
+}
+
+function renderConversations(convs) {
+  const el = document.getElementById('conversations-list');
+  document.getElementById('conv-count-label').textContent = `${convs.length} conversations`;
+  if (!convs.length) { el.innerHTML='<div style="padding:48px;text-align:center;color:var(--text3);font-size:13px;">No conversations found</div>'; return; }
+  el.innerHTML = convs.map(c=>convHtml(c)).join('');
+}
+
+function convHtml(c) {
+  const init = (c.contact_name||'U')[0].toUpperCase();
+  const chClass = c.channel?.includes('whatsapp')?'ch-whatsapp':c.channel?.includes('email')?'ch-email':'ch-webchat';
+  const chLabel = c.channel?.includes('whatsapp')?'WhatsApp':c.channel?.includes('email')?'Email':'Chat';
+  const time = c.last_activity ? new Date(c.last_activity*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
+  const url = `${CHATWOOT_URL}/${c.id}`;
+  return `<div class="conv-item" onclick="window.open('${url}','_blank')">
+    <div class="conv-avatar">${init}</div>
+    <div class="conv-info">
+      <div class="conv-top"><div class="conv-name">${c.contact_name||'Unknown'}</div><div class="conv-time">${time}</div></div>
+      <div class="conv-msg">${c.last_message||'No messages yet'}</div>
+      <div class="conv-meta">
+        <div class="status-dot ${c.status==='open'?'dot-open':c.status==='resolved'?'dot-resolved':'dot-pending'}"></div>
+        <span class="channel-badge ${chClass}">${chLabel}</span>
+        ${c.unread>0?`<span class="unread-badge">${c.unread}</span>`:''}
+        <span class="open-chatwoot">Open in Chatwoot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function filterConv(status, btn) {
+  document.querySelectorAll('[id^=filter-]').forEach(b=>{b.className='topbar-btn btn-ghost';b.style.cssText='padding:6px 14px;font-size:12px;';});
+  btn.className='topbar-btn btn-primary'; btn.style.cssText='padding:6px 14px;font-size:12px;';
+  state.convStatus=status;
+  if (state.cache.conversations) renderConversations(state.cache.conversations);
+}
+
+// ── Templates ──
+async function refreshTemplates() {
+  const data = await api('nexora-get-templates');
+  state.cache.templates = data.templates||[];
+  state.templates = state.cache.templates;
+  renderTemplatesPage(state.cache.templates);
+}
+
+function renderTemplatesPage(templates) {
+  const el = document.getElementById('templates-list');
+  if (!templates.length) { el.innerHTML='<div style="padding:48px;text-align:center;color:var(--text3);font-size:13px;">No approved templates yet.</div>'; return; }
+  el.innerHTML=`<div class="template-grid">${templates.map(t=>`
+    <div class="template-card" style="cursor:default;">
+      <div class="template-name">${t.name} <span class="template-lang">${t.language}</span>
+        <span style="margin-left:auto;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;background:var(--green-light);color:var(--green);">APPROVED</span>
+      </div>
+      <div class="template-body">${t.body||'No body'}</div>
+    </div>`).join('')}</div>`;
+}
+
+// ── Campaign ──
+async function refreshCampaign() {
+  const [leadsData, tplData] = await Promise.all([api('nexora-get-leads'), api('nexora-get-templates')]);
+  state.cache.groups = leadsData.groups||[];
+  state.cache.templates = tplData.templates||[];
+  state.groups = state.cache.groups;
+  state.templates = state.cache.templates;
+  renderCampaignGroups(state.cache.groups);
+  renderCampaignTemplates(state.cache.templates);
+}
+
+function getDistricts(groups) {
+  return ['ALL', ...new Set(groups.map(g=>g.district))];
+}
+
+function renderDistrictFilters(groups, containerId, onSelect) {
+  const el = document.getElementById(containerId);
+  const districts = getDistricts(groups);
+  el.innerHTML = districts.map(d=>`
+    <div class="filter-chip ${d==='ALL'?'active':''}" onclick="${onSelect}('${d}', this)">${d}</div>`).join('');
+}
+
+function filterCampaignByDistrict(district, el) {
+  document.querySelectorAll('#district-filters .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  state.activeDistrict = district;
+  const filtered = district==='ALL' ? state.groups : state.groups.filter(g=>g.district===district);
+  renderGroupCards(filtered, 'campaign-groups', true);
+}
+
+function filterLeadsByDistrict(district, el) {
+  document.querySelectorAll('#leads-district-filters .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const filtered = district==='ALL' ? state.cache.groups : state.cache.groups.filter(g=>g.district===district);
+  renderGroupCards(filtered, 'leads-groups', false);
+}
+
+function renderCampaignGroups(groups) {
+  renderDistrictFilters(groups, 'district-filters', 'filterCampaignByDistrict');
+  renderGroupCards(groups, 'campaign-groups', true);
+}
+
+function renderGroupCards(groups, containerId, selectable) {
+  const el = document.getElementById(containerId);
+  if (!groups.length) { el.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--text3);font-size:13px;">No groups found</div>'; return; }
+  el.innerHTML = groups.map(g=>`
+    <div class="group-card ${selectable?'':'cursor:default;'}" id="group-${g.school.replace(/\s/g,'_')}_${g.district.replace(/\s/g,'_')}" ${selectable?`onclick="toggleGroup('${g.school}','${g.district}',this)"`:'style="cursor:default;"'}>
+      <div class="group-school">${g.school}</div>
+      <div class="group-district">${g.district}</div>
+      <div class="group-count">${g.count}</div>
+      <div class="group-label">contacts</div>
+    </div>`).join('');
+}
+
+function renderCampaignTemplates(templates) {
+  const el = document.getElementById('campaign-templates');
+  if (!templates.length) { el.innerHTML='<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px;">No approved templates</div>'; return; }
+  el.innerHTML = templates.map(t=>`
+    <div class="template-card" onclick="selectTemplate('${t.name}',this)">
+      <div class="template-name">${t.name} <span class="template-lang">${t.language}</span></div>
+      <div class="template-body">${t.body||'No body'}</div>
+    </div>`).join('');
+}
+
+function toggleGroup(school, district, el) {
+  el.classList.toggle('selected');
+  const key = school+'||'+district;
+  const idx = state.selectedGroups.indexOf(key);
+  if (idx===-1) state.selectedGroups.push(key);
+  else state.selectedGroups.splice(idx,1);
+}
+
+function toggleAllGroups(cb) {
+  state.selectedGroups=[];
+  document.querySelectorAll('.group-card').forEach(c=>{
+    c.classList.toggle('selected',cb.checked);
+    if (cb.checked) {
+      const school = c.querySelector('.group-school').textContent;
+      const district = c.querySelector('.group-district').textContent;
+      state.selectedGroups.push(school+'||'+district);
+    }
+  });
+}
+
+function selectTemplate(name, el) {
+  document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedTemplate = state.templates.find(t=>t.name===name);
+}
+
+function campaignStep2() {
+  document.getElementById('campaign-step-1').style.display='none';
+  document.getElementById('campaign-step-2').style.display='block';
+  document.getElementById('step-1-indicator').className='wizard-step done';
+  document.getElementById('step-2-indicator').className='wizard-step active';
+}
+
+function campaignStep1() {
+  document.getElementById('campaign-step-2').style.display='none';
+  document.getElementById('campaign-step-1').style.display='block';
+  document.getElementById('step-1-indicator').className='wizard-step active';
+  document.getElementById('step-2-indicator').className='wizard-step';
+}
+
+function campaignStep3() {
+  if (!state.selectedTemplate) { showToast('Please select a template','error'); return; }
+  document.getElementById('campaign-step-2').style.display='none';
+  document.getElementById('campaign-step-3').style.display='block';
+  document.getElementById('step-2-indicator').className='wizard-step done';
+  document.getElementById('step-3-indicator').className='wizard-step active';
+
+  const allGroups = document.getElementById('select-all-groups').checked || state.selectedGroups.length===0;
+  const totalCount = allGroups
+    ? state.groups.reduce((a,g)=>a+g.count,0)
+    : state.groups.filter(g=>state.selectedGroups.includes(g.school+'||'+g.district)).reduce((a,g)=>a+g.count,0);
+
+  document.getElementById('review-audience').textContent = allGroups ? 'All contacts' : state.selectedGroups.map(k=>k.replace('||',' - ')).join(', ');
+  document.getElementById('review-count').textContent = totalCount;
+  document.getElementById('review-template').textContent = state.selectedTemplate.name;
+  document.getElementById('review-time').textContent = `~${Math.ceil(totalCount*2/60)} min`;
+  document.getElementById('review-message').textContent = state.selectedTemplate.body||'';
+}
+
+async function sendCampaign() {
+  const btn = document.getElementById('send-btn');
+  btn.disabled=true; btn.textContent='Sending...';
+  document.getElementById('sending-progress').style.display='block';
+  let prog=0;
+  const interval = setInterval(()=>{
+    prog=Math.min(prog+4,90);
+    document.getElementById('progress-fill').style.width=prog+'%';
+    document.getElementById('progress-text').textContent=`Processing... ${prog}%`;
+  },1200);
+  try {
+    const allGroups = document.getElementById('select-all-groups').checked||state.selectedGroups.length===0;
+    const firstGroup = allGroups ? null : state.selectedGroups[0]?.split('||');
+    const result = await api('nexora-send-campaign','POST',{
+      school: allGroups ? 'ALL' : (firstGroup?.[0]||'ALL'),
+      district: allGroups ? 'ALL' : (firstGroup?.[1]||'ALL'),
+      template_name: state.selectedTemplate.name,
+      language: state.selectedTemplate.language
+    });
+    clearInterval(interval);
+    document.getElementById('progress-fill').style.width='100%';
+    document.getElementById('progress-text').textContent=`Done! Sent: ${result.sent}, Failed: ${result.failed}`;
+    showToast(`Campaign sent! ${result.sent} delivered`,'success');
+    setTimeout(()=>{
+      document.getElementById('sending-progress').style.display='none';
+      btn.disabled=false;
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Campaign';
+      resetCampaign();
+    },3000);
+  } catch(e) {
+    clearInterval(interval);
+    showToast('Campaign failed. Try again.','error');
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Campaign';
+  }
+}
+
+function resetCampaign() {
+  state.selectedGroups=[]; state.selectedTemplate=null;
+  document.getElementById('step-3-indicator').className='wizard-step';
+  document.getElementById('step-2-indicator').className='wizard-step';
+  campaignStep1();
+  document.getElementById('select-all-groups').checked=false;
+  document.querySelectorAll('.group-card').forEach(c=>c.classList.remove('selected'));
+}
+
+// ── Reports ──
+async function refreshReports() {
+  await Promise.all([refreshStats(), refreshLeadData()]);
+  if (state.cache.stats) renderReports(state.cache.stats);
+  if (state.cache.groups) renderReportLeads(state.cache.groups);
+}
+
+function renderReports(data) {
+  document.getElementById('report-metrics').innerHTML=`
+    <div class="metric-row"><div class="metric-label">Open Conversations</div><div class="metric-value" style="color:var(--accent)">${data.open||0}</div></div>
+    <div class="metric-row"><div class="metric-label">Resolved</div><div class="metric-value">${data.resolved||0}</div></div>
+    <div class="metric-row"><div class="metric-label">Pending</div><div class="metric-value" style="color:var(--amber)">${data.pending||0}</div></div>
+    <div class="metric-row"><div class="metric-label">Total</div><div class="metric-value">${data.total_conversations||0}</div></div>`;
+}
+
+function renderReportLeads(groups) {
+  const districtMap={};
+  groups.forEach(g=>{districtMap[g.district]=(districtMap[g.district]||0)+g.count;});
+  const sorted=Object.entries(districtMap).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('report-leads').innerHTML=sorted.map(([d,c])=>`
+    <div class="metric-row"><div class="metric-label">${d}</div><div class="metric-value" style="color:var(--accent)">${c}</div></div>`).join('');
+}
+
+// ── Leads ──
+async function refreshLeads() {
+  const data = await api('nexora-get-leads');
+  state.cache.groups = data.groups||[];
+  state.cache.leadsTotal = data.total||0;
+  state.groups = state.cache.groups;
+  renderLeads(state.cache.groups, state.cache.leadsTotal);
+}
+
+function renderLeads(groups, total) {
+  document.getElementById('leads-total-label').textContent=`${total} total contacts`;
+  renderDistrictFilters(groups,'leads-district-filters','filterLeadsByDistrict');
+  renderGroupCards(groups,'leads-groups',false);
+}
+
+// ── Template Create ──
+function openCreateTemplate() { document.getElementById('create-template-modal').classList.add('open'); }
+function closeCreateTemplate() { document.getElementById('create-template-modal').classList.remove('open'); }
+
+async function createTemplate() {
+  const name=document.getElementById('tpl-name').value.trim();
+  const body=document.getElementById('tpl-body').value.trim();
+  if (!name||!body) { showToast('Name and body required','error'); return; }
+  try {
+    const result=await api('nexora-create-template','POST',{
+      name,body,
+      language:document.getElementById('tpl-lang').value,
+      category:document.getElementById('tpl-category').value,
+      header:document.getElementById('tpl-header').value.trim(),
+      footer:document.getElementById('tpl-footer').value.trim()
+    });
+    if (result.success) { showToast('Submitted for Meta approval!','success'); closeCreateTemplate(); }
+    else showToast('Failed: '+(result.error||'Unknown'),'error');
+  } catch(e) { showToast('Failed to create template','error'); }
+}
+
+// ── Toast ──
+function showToast(msg, type='info') {
+  const el=document.createElement('div');
+  el.className=`toast ${type}`; el.textContent=msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(()=>el.remove(),4000);
+}
+</script>
+</body>
+</html>
