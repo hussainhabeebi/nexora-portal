@@ -1047,9 +1047,9 @@ function loadCache() {
   S.history = S.cache.history || [];
   renderHistoryList();
 
-  // Load cached data into views
-  if (S.cache.groups) { S.groups = S.cache.groups; }
-  if (S.cache.templates) { S.templates = S.cache.templates; }
+  // Always sync state from cache
+  if (S.cache.groups && S.cache.groups.length) { S.groups = S.cache.groups; }
+  if (S.cache.templates && S.cache.templates.length) { S.templates = S.cache.templates; }
 
   // Show cache banners with timestamp
   const time = new Date(ts).toLocaleString('en-IN', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
@@ -1214,6 +1214,43 @@ function navigate(page, el) {
   document.getElementById('page-title').textContent = titles[page]||page;
   S.page = page;
   closeSidebar();
+
+  // Always sync state from cache when navigating to campaigns
+  if (page === 'campaigns') {
+    if (S.cache.groups && S.cache.groups.length) {
+      S.groups = S.cache.groups;
+      renderCampGroups(S.cache.groups);
+    }
+    if (S.cache.templates && S.cache.templates.length) {
+      S.templates = S.cache.templates;
+      renderCampTemplates(S.cache.templates);
+    }
+    if (S.cache.groups || S.cache.templates) hideBanner('camp');
+  }
+
+  // Sync leads page from cache
+  if (page === 'leads' && S.cache.groups) {
+    renderLeadsPage(S.cache.groups, S.cache.leadsTotal);
+    hideBanner('leads');
+  }
+
+  // Sync conversations from cache
+  if (page === 'conversations' && S.cache.conversations) {
+    renderConvs(S.cache.conversations);
+    hideBanner('conv');
+  }
+
+  // Sync templates from cache
+  if (page === 'templates' && S.cache.templates) {
+    renderTplPage(S.cache.templates);
+    hideBanner('tpl');
+  }
+
+  // Sync reports from cache
+  if (page === 'reports' && S.cache.stats) {
+    renderReports();
+    hideBanner('rep');
+  }
 }
 
 // ── Mobile Sidebar ──
